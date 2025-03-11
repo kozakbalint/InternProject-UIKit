@@ -11,6 +11,7 @@ import UIKit
 class MainViewController: UIViewController {
     var viewModel = MainViewModel()
     var cellViewModels = [MovieCellViewModel]()
+    var searchController = UISearchController()
     var tableView = UITableView()
     private var cancellables: Set<AnyCancellable> = []
 
@@ -27,6 +28,7 @@ class MainViewController: UIViewController {
         view.addSubview(tableView)
         
         setupToolbar()
+        setupSearchBar()
         setupTableView()
     }
     
