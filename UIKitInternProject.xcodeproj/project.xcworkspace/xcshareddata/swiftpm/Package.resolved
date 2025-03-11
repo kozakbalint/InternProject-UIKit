@@ -1,0 +1,15 @@
+{
+  "originHash" : "48c48365deb44b5140ff94a99cc82cb64544f1102f0f92d670a3796202babf12",
+  "pins" : [
+    {
+      "identity" : "tmdbnetworkmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kozakbalint/TmdbNetworkManager",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cff4cdf2c47bb4ab44aa1096675e28280334c236"
+      }
+    }
+  ],
+  "version" : 3
+}
