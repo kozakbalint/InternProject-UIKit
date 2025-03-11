@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 class MainViewController: UIViewController {
-    var viewMpdel = MainViewModel()
+    var viewModel = MainViewModel()
     var cellViewModels = [MovieCellViewModel]()
     var tableView = UITableView()
     private var cancellables: Set<AnyCancellable> = []
@@ -26,16 +26,69 @@ class MainViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)
         
+        setupToolbar()
         setupTableView()
     }
     
     func bindViewModel() {
-        viewMpdel.$movies
+        viewModel.$movies
             .receive(on: RunLoop.main)
             .sink { [weak self] movies in
                 self?.cellViewModels = movies.map { MovieCellViewModel(movie: $0)}
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
+        
+        viewModel.$filteredMovies
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$searchText
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.viewModel.filterMoviesBySearchText()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$genreFilters
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.viewModel.filterMoviesByGenre()
+            }
+            .store(in: &cancellables)
+    }
+    
+    func setupToolbar() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "line.3.horizontal.decrease.circle"),
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        
+        self.navigationItem.rightBarButtonItem?.menu = createFilterMenu()
+    }
+    
+    func createFilterMenu() -> UIMenu {
+        var actions = [UIAction]()
+        for genre in Genre.allCases {
+            let isSelected = isGenreSelected(genre: genre)
+            let action = UIAction(title: genre.name, state: isSelected ? .on : .off) { [weak self] action in
+                self?.viewModel.toggleGenreFilter(genre)
+                self?.navigationItem.rightBarButtonItem?.menu = self?.createFilterMenu()
+            }
+
+            actions.append(action)
+        }
+        
+        return UIMenu(title: "Filter by genre", children: actions)
+    }
+                            
+    func isGenreSelected(genre: Genre) -> Bool {
+        return viewModel.genreFilters.contains(genre)
     }
 }

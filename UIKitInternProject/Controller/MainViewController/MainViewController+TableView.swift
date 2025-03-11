@@ -30,18 +30,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellViewModels.count
+        return viewModel.filteredMovies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier, for: indexPath) as? MovieTableViewCell else {
             return UITableViewCell()
         }
-        cell.setup(with: cellViewModels[indexPath.row])
+        let cellViewModel = MovieCellViewModel(movie: viewModel.filteredMovies[indexPath.row])
+        cell.setup(with: cellViewModel)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return 120
     }
 }
