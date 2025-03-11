@@ -1,6 +1,15 @@
 {
-  "originHash" : "48c48365deb44b5140ff94a99cc82cb64544f1102f0f92d670a3796202babf12",
+  "originHash" : "72be45f11e14d5224c5ca9cdcc08a41e53200aeacb774c50fe34dc2cf847c61d",
   "pins" : [
+    {
+      "identity" : "sdwebimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImage",
+      "state" : {
+        "revision" : "cac9a55a3ae92478a2c95042dcc8d9695d2129ca",
+        "version" : "5.21.0"
+      }
+    },
     {
       "identity" : "tmdbnetworkmanager",
       "kind" : "remoteSourceControl",

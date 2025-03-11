@@ -6,6 +6,7 @@
 //
 
 import Combine
+import SDWebImage
 import UIKit
 
 class MovieTableViewCell: UITableViewCell {
@@ -29,23 +30,6 @@ class MovieTableViewCell: UITableViewCell {
         self.viewModel = viewModel
         titleLabel?.text = viewModel.title
         releaseLabel?.text = viewModel.releaseYear
-        posterView?.image = UIImage(systemName: "photo")
-        cancellables.removeAll()
-        bindViewModel()
-        viewModel.fetchPoster()
+        posterView?.sd_setImage(with: viewModel.posterUrl, placeholderImage: UIImage(named: "placeholder"))
     }
-    
-    private func bindViewModel() {
-        viewModel?.$posterData
-            .receive(on: RunLoop.main)
-            .sink { [weak self] data in
-                if let data = data {
-                    self?.posterView?.image = UIImage(data: data)
-                } else {
-                    self?.posterView?.image = UIImage(systemName: "photo")
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
 }

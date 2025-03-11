@@ -21,19 +21,4 @@ class MovieCellViewModel {
         self.releaseYear = movie.releaseYear ?? ""
         self.posterUrl = movie.posterURL ?? nil
     }
-    
-    func fetchPoster() {
-        //TODO: add some cache
-        
-        guard let url = posterUrl else {
-            posterData = nil
-            return
-        }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .replaceError(with: nil)
-            .receive(on: RunLoop.main)
-            .assign(to: &$posterData)
-    }
 }

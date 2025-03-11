@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E05BA5BB2D80237600352E2E /* TmdbNetworkManager in Frameworks */ = {isa = PBXBuildFile; productRef = E05BA5BA2D80237600352E2E /* TmdbNetworkManager */; };
+		E05BA5DB2D80698D00352E2E /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = E05BA5DA2D80698D00352E2E /* SDWebImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E05BA5DB2D80698D00352E2E /* SDWebImage in Frameworks */,
 				E05BA5BB2D80237600352E2E /* TmdbNetworkManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = UIKitInternProject;
 			packageProductDependencies = (
 				E05BA5BA2D80237600352E2E /* TmdbNetworkManager */,
+				E05BA5DA2D80698D00352E2E /* SDWebImage */,
 			);
 			productName = UIKitInternProject;
 			productReference = E05BA5A12D80228600352E2E /* UIKitInternProject.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E05BA5B92D80237600352E2E /* XCRemoteSwiftPackageReference "TmdbNetworkManager" */,
+				E05BA5D92D80698D00352E2E /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E05BA5A22D80228600352E2E /* Products */;
@@ -360,6 +364,14 @@
 				kind = branch;
 			};
 		};
+		E05BA5D92D80698D00352E2E /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -367,6 +379,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E05BA5B92D80237600352E2E /* XCRemoteSwiftPackageReference "TmdbNetworkManager" */;
 			productName = TmdbNetworkManager;
+		};
+		E05BA5DA2D80698D00352E2E /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E05BA5D92D80698D00352E2E /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
