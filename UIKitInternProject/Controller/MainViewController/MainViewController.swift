@@ -10,6 +10,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     var viewMpdel = MainViewModel()
+    var cellViewModels = [MovieCellViewModel]()
     var tableView = UITableView()
     private var cancellables: Set<AnyCancellable> = []
 
@@ -31,7 +32,8 @@ class MainViewController: UIViewController {
     func bindViewModel() {
         viewMpdel.$movies
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] movies in
+                self?.cellViewModels = movies.map { MovieCellViewModel(movie: $0)}
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
