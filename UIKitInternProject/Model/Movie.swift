@@ -11,7 +11,7 @@ import TmdbNetworkManager
 struct Movie: Codable, Identifiable {
     let adult: Bool
     let backdropPath: String?
-    let genres: [Genres]
+    let genres: [Genre]
     let id: Int
     let originalLanguage: String?
     let originalTitle, overview: String?
