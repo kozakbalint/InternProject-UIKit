@@ -36,7 +36,9 @@ class MainViewController: UIViewController {
         viewModel.$movies
             .receive(on: RunLoop.main)
             .sink { [weak self] movies in
-                self?.cellViewModels = movies.map { MovieCellViewModel(movie: $0)}
+                self?.cellViewModels = movies.map { movie in
+                    MovieCellViewModel(cell: MovieTableCell(from: movie))
+                }
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -49,6 +51,7 @@ class MainViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.$searchText
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.viewModel.filterMoviesBySearchText()
@@ -78,7 +81,7 @@ class MainViewController: UIViewController {
     func createFilterMenu() -> UIMenu {
         var actions = [UIAction]()
         for genre in Genre.allCases {
-            let isSelected = isGenreSelected(genre: genre)
+            let isSelected = viewModel.isGenreSelected(genre: genre)
             let action = UIAction(title: genre.name, state: isSelected ? .on : .off) { [weak self] action in
                 self?.viewModel.toggleGenreFilter(genre)
                 self?.navigationItem.rightBarButtonItem?.menu = self?.createFilterMenu()
@@ -88,9 +91,5 @@ class MainViewController: UIViewController {
         }
         
         return UIMenu(title: "Filter by genre", children: actions)
-    }
-                            
-    func isGenreSelected(genre: Genre) -> Bool {
-        return viewModel.genreFilters.contains(genre)
     }
 }

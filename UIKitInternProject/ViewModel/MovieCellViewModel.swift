@@ -13,12 +13,9 @@ class MovieCellViewModel {
     var releaseYear: String
     var posterUrl: URL?
     
-    @Published var posterData: Data?
-    private var cancellables: Set<AnyCancellable> = []
-    
-    init(movie: Movie) {
-        self.title = movie.title ?? ""
-        self.releaseYear = movie.releaseYear ?? ""
-        self.posterUrl = movie.posterURL ?? nil
+    init(cell: MovieTableCell) {
+        self.title = cell.title
+        self.releaseYear = cell.releaseYear
+        self.posterUrl = cell.posterURL ?? nil
     }
 }

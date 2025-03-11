@@ -20,7 +20,6 @@ class MovieTableViewCell: UITableViewCell {
     @IBOutlet var releaseLabel: UILabel!
     
     private var viewModel: MovieCellViewModel?
-    private var cancellables: Set<AnyCancellable> = []
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -66,4 +66,8 @@ class MainViewModel {
             return !movieGenres.intersection(genreFilters).isEmpty
         }
     }
+    
+    func isGenreSelected(genre: Genre) -> Bool {
+        return genreFilters.contains(genre)
+    }
 }
