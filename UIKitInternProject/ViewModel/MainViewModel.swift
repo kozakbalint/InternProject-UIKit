@@ -38,7 +38,7 @@ class MainViewModel {
         if searchText.isEmpty {
             filteredMovies = filteredMovies.isEmpty ? movies : filteredMovies
         } else {
-            filteredMovies = movies.filter { movie in
+            filteredMovies = filteredMovies.filter { movie in
                 let title = movie.title ?? ""
                 return title.localizedStandardContains(searchText)
             }
