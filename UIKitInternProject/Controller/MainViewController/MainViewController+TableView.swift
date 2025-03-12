@@ -37,12 +37,21 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier, for: indexPath) as? MovieTableViewCell else {
             return UITableViewCell()
         }
-        let cellViewModel = MovieCellViewModel(movie: viewModel.filteredMovies[indexPath.row])
+        let movie = viewModel.filteredMovies[indexPath.row]
+        let cellViewModel = MovieCellViewModel(cell: MovieTableCell(from: movie))
         cell.setup(with: cellViewModel)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "MovieDetails", bundle: nil)
+        if let detailsVC = storyboard.instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController {
+            detailsVC.setMovie(movie: viewModel.filteredMovies[indexPath.row])
+            navigationController?.pushViewController(detailsVC, animated: true)
+        }
     }
 }
