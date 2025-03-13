@@ -16,7 +16,7 @@ class RatingViewModel: ObservableObject {
     
     func sendRating(movieId: Int, rating: Int) {
         NetworkManager.shared.addRatingToMovie(movieId: movieId, value: Double(rating))
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case .failure(let error) = completion {
                     print(error)
