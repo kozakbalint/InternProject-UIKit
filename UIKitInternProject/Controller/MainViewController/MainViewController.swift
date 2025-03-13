@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
     
     func bindViewModel() {
         viewModel.$movies
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] movies in
                 self?.cellViewModels = movies.map { movie in
                     MovieCellViewModel(cell: MovieTableCell(from: movie))
@@ -44,22 +44,22 @@ class MainViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.$filteredMovies
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
         
         viewModel.$searchText
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
-            .receive(on: RunLoop.main)
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.viewModel.filterMoviesBySearchText()
             }
             .store(in: &cancellables)
         
         viewModel.$genreFilters
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.viewModel.filterMoviesByGenre()
             }
