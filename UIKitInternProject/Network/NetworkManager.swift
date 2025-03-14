@@ -15,8 +15,14 @@ class NetworkManager {
     
     
     private init() {
-        guard let apiKey = ProcessInfo.processInfo.environment["TMDB_AUTH_TOKEN"] else {
-            fatalError("No TMDB AUTH TOKEN found in environment variables. Please set TMDB_AUTH_TOKEN.")
+        guard let plistFile = Bundle.main.path(forResource: "Tmdb", ofType: "plist") else {
+            fatalError("No Tmdb.plist file found")
+        }
+        
+        let plist = NSDictionary(contentsOfFile: plistFile)
+        
+        guard let apiKey = plist?["TMDB_AUTH_TOKEN"] as? String else {
+            fatalError("No TMDB_AUTH_TOKEN found in Tmdb.plist")
         }
         
         self.tmdbNetworkManager = TmdbNetworkManager(apiClient: APIClient(authToken: apiKey))
