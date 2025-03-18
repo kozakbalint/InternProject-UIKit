@@ -8,7 +8,7 @@
 import Foundation
 import TmdbNetworkManager
 
-struct Movie: Codable, Identifiable {
+struct Movie: Identifiable {
     let adult: Bool
     let backdropPath: String?
     let genres: [Genre]
@@ -23,9 +23,11 @@ struct Movie: Codable, Identifiable {
     let voteCount: Int
     
     var posterURL: URL? {
-        if posterPath == nil { return nil }
-        if posterPath!.isEmpty { return nil }
-        return URL(string: "https://image.tmdb.org/t/p/w500\(posterPath!)")!
+        if let posterPath = posterPath, !posterPath.isEmpty {
+            return URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")
+        } else {
+            return nil
+        }
     }
     
     var releaseYear: String? {
@@ -75,6 +77,4 @@ struct Movie: Codable, Identifiable {
             self.genres = []
         }
     }
-    
-    static let example = Movie(from: MovieResponse(adult: false, backdropPath: "/bNTHSd3UqqLzIVwbDOGPnx3ScfF.jpg", genreIds: [16, 35, 14], id: 808, originalLanguage: "en", originalTitle: "Shrek", overview: "It ain't easy bein' green -- especially if you're a likable (albeit smelly) ogre named Shrek. On a mission to retrieve a gorgeous princess from the clutches of a fire-breathing dragon, Shrek teams up with an unlikely compatriot -- a wisecracking donkey.", popularity: 222.124, posterPath: "/o04jZs5SXhbvhqO4981W7KJXOWZ.jpg", releaseDate: "2001-05-18", title: "Shrek", video: false, voteAverage: 7.747, voteCount: 17451))
 }

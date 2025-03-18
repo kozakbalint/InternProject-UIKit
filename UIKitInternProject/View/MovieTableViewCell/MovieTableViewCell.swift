@@ -9,24 +9,17 @@ import Combine
 import SDWebImage
 import UIKit
 
-class MovieTableViewCell: UITableViewCell {
+final class MovieTableViewCell: UITableViewCell {
     public static let identifier = "MovieTableViewCell"
     public static func register() -> UINib {
         return UINib(nibName: identifier, bundle: nil)
     }
     
-    @IBOutlet var posterView: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var releaseLabel: UILabel!
-    
-    private var viewModel: MovieCellViewModel?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
+    @IBOutlet weak var posterView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var releaseLabel: UILabel!
     
     func setup(with viewModel: MovieCellViewModel) {
-        self.viewModel = viewModel
         titleLabel?.text = viewModel.title
         releaseLabel?.text = viewModel.releaseYear
         posterView?.sd_setImage(with: viewModel.posterUrl, placeholderImage: UIImage(named: "placeholder"))

@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     var viewModel = MainViewModel()
     var cellViewModels = [MovieCellViewModel]()
     var searchController = UISearchController()
@@ -22,22 +22,12 @@ class MainViewController: UIViewController {
         bindViewModel()
     }
     
-    func setupView() {
-        title = "Popular Movies"
-        view.backgroundColor = .systemBackground
-        view.addSubview(tableView)
-        
-        setupToolbar()
-        setupSearchBar()
-        setupTableView()
-    }
-    
     func bindViewModel() {
         viewModel.$movies
             .receive(on: DispatchQueue.main)
             .sink { [weak self] movies in
-                self?.cellViewModels = movies.map { movie in
-                    MovieCellViewModel(cell: MovieTableCell(from: movie))
+                self?.cellViewModels = movies.map {
+                    MovieCellViewModel(cell: MovieTableCell(from: $0))
                 }
                 self?.tableView.reloadData()
             }
@@ -57,13 +47,18 @@ class MainViewController: UIViewController {
                 self?.viewModel.filterMoviesBySearchText()
             }
             .store(in: &cancellables)
+    }
+}
+
+private extension MainViewController {
+    func setupView() {
+        title = "Popular Movies"
+        view.backgroundColor = .systemBackground
+        view.addSubview(tableView)
         
-        viewModel.$genreFilters
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.viewModel.filterMoviesByGenre()
-            }
-            .store(in: &cancellables)
+        setupToolbar()
+        setupSearchBar()
+        setupTableView()
     }
     
     func setupToolbar() {
@@ -80,7 +75,7 @@ class MainViewController: UIViewController {
     
     func createFilterMenu() -> UIMenu {
         var actions = [UIAction]()
-        for genre in Genre.allCases {
+        Genre.allCases.forEach { genre in
             let isSelected = viewModel.isGenreSelected(genre: genre)
             let action = UIAction(title: genre.name, state: isSelected ? .on : .off) { [weak self] action in
                 self?.viewModel.toggleGenreFilter(genre)
@@ -92,4 +87,5 @@ class MainViewController: UIViewController {
         
         return UIMenu(title: "Filter by genre", children: actions)
     }
+
 }

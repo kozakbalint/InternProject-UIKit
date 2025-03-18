@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class MainViewModel {
+final class MainViewModel {
     @Published var movies: [Movie] = []
     @Published var filteredMovies: [Movie] = []
     @Published var searchText: String = ""
@@ -36,10 +36,10 @@ class MainViewModel {
         filterMoviesByGenre()
         
         if searchText.isEmpty {
-            filteredMovies = filteredMovies.isEmpty ? movies : filteredMovies
+            filteredMovies = filteredMovies.isEmpty && genreFilters.isEmpty ? movies : filteredMovies
         } else {
-            filteredMovies = filteredMovies.filter { movie in
-                let title = movie.title ?? ""
+            filteredMovies = filteredMovies.filter {
+                let title = $0.title ?? ""
                 return title.localizedStandardContains(searchText)
             }
         }
@@ -52,7 +52,7 @@ class MainViewModel {
             genreFilters.insert(genre)
         }
         
-        filterMoviesBySearchText()
+        filterMoviesByGenre()
     }
     
     func filterMoviesByGenre() {
@@ -61,8 +61,8 @@ class MainViewModel {
             return
         }
         
-        filteredMovies = movies.filter { movie in
-            let movieGenres: Set<Genre> = Set(movie.genres)
+        filteredMovies = movies.filter {
+            let movieGenres: Set<Genre> = Set($0.genres)
             return !movieGenres.intersection(genreFilters).isEmpty
         }
     }

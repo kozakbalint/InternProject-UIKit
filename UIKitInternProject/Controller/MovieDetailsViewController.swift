@@ -8,12 +8,12 @@
 import SDWebImage
 import UIKit
 
-class MovieDetailsViewController: UIViewController {
+final class MovieDetailsViewController: UIViewController {
     var viewModel = MovieDetailsViewModel()
     
-    @IBOutlet var posterView: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var overviewLabel: UILabel!
+    @IBOutlet weak var posterView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var overviewLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +21,20 @@ class MovieDetailsViewController: UIViewController {
         setupView()
     }
     
+    func setMovie(movie: Movie) {
+        viewModel.movie = movie
+    }
+    
+    @objc func handleTapGesture() {
+        viewModel.presentActivityViewController(from: self, image: posterView.image)
+    }
+    
+    @objc func presentRatingView() {
+        viewModel.presentRatingView(from: self)
+    }
+}
+
+private extension MovieDetailsViewController {
     func setupView() {
         title = viewModel.movie?.title
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -47,17 +61,5 @@ class MovieDetailsViewController: UIViewController {
             target: self,
             action: #selector(presentRatingView)
         )
-    }
-    
-    func setMovie(movie: Movie) {
-        viewModel.movie = movie
-    }
-    
-    @objc func handleTapGesture() {
-        viewModel.presentActivityViewController(from: self, image: posterView.image)
-    }
-    
-    @objc func presentRatingView() {
-        viewModel.presentRatingView(from: self)
     }
 }

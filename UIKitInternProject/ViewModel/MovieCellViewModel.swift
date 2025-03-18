@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class MovieCellViewModel {
+final class MovieCellViewModel {
     var title: String
     var releaseYear: String
     var posterUrl: URL?
