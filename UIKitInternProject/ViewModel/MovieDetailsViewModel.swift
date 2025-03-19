@@ -10,7 +10,7 @@ import SDWebImage
 import UIKit
 import SwiftUI
 
-class MovieDetailsViewModel {
+final class MovieDetailsViewModel {
     @Published var movie: Movie?
     
     func presentActivityViewController(from viewController: UIViewController, image: UIImage?) {

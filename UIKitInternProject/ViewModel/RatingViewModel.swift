@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import TmdbNetworkManager
 
-class RatingViewModel: ObservableObject {
+final class RatingViewModel: ObservableObject {
     @Published var rating: Int = 0
     @Published var success: Bool = false
     private var cancellables: Set<AnyCancellable> = []

@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import TmdbNetworkManager
 
-class NetworkManager {
+final class NetworkManager {
     static let shared = NetworkManager()
     private let tmdbNetworkManager: TmdbNetworkManager?
     
