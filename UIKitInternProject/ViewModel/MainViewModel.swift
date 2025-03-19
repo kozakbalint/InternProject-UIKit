@@ -8,16 +8,20 @@
 import Combine
 import Foundation
 
+protocol MainViewModelDelegate: AnyObject {
+    func didUpdateMovies(_ movies: [Movie])
+    func didUpdateFilteredMovies(_ filteredMovies: [Movie])
+    func didUpdateSearchText(_ searchText: String)
+}
+
 final class MainViewModel {
-    @Published var movies: [Movie] = []
-    @Published var filteredMovies: [Movie] = []
-    @Published var searchText: String = ""
-    @Published var genreFilters: Set<Genre> = []
-    private var cancellables: Set<AnyCancellable> = []
+    weak var mainViewModelDelegate: MainViewModelDelegate?
     
-    init () {
-        fetchMovies()
-    }
+    var movies: [Movie] = []
+    var filteredMovies: [Movie] = []
+    var searchText: String = ""
+    var genreFilters: Set<Genre> = []
+    var cancellables: Set<AnyCancellable> = []
     
     func fetchMovies() {
         NetworkManager.shared.getPopularMovies(page: 1)
@@ -26,8 +30,8 @@ final class MainViewModel {
                     print(error.localizedDescription)
                 }
             } receiveValue: { [weak self] movies in
-                self?.movies = movies.map { Movie(from: $0)}
-                self?.filteredMovies = self?.movies ?? []
+                self?.mainViewModelDelegate?.didUpdateMovies(movies.map { Movie(from: $0) })
+                self?.mainViewModelDelegate?.didUpdateFilteredMovies(self?.movies ?? [])
             }
             .store(in: &cancellables)
     }
@@ -43,6 +47,8 @@ final class MainViewModel {
                 return title.localizedStandardContains(searchText)
             }
         }
+        
+        self.mainViewModelDelegate?.didUpdateFilteredMovies(filteredMovies)
     }
     
     func toggleGenreFilter(_ genre: Genre) {
@@ -58,13 +64,14 @@ final class MainViewModel {
     func filterMoviesByGenre() {
         if genreFilters.isEmpty {
             filteredMovies = movies
-            return
+        } else {
+            filteredMovies = movies.filter {
+                let movieGenres: Set<Genre> = Set($0.genres)
+                return !movieGenres.intersection(genreFilters).isEmpty
+            }
         }
         
-        filteredMovies = movies.filter {
-            let movieGenres: Set<Genre> = Set($0.genres)
-            return !movieGenres.intersection(genreFilters).isEmpty
-        }
+        self.mainViewModelDelegate?.didUpdateFilteredMovies(filteredMovies)
     }
     
     func isGenreSelected(genre: Genre) -> Bool {

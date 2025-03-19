@@ -5,7 +5,6 @@
 //  Created by Balint Kozak on 2025. 03. 11..
 //
 
-import Combine
 import UIKit
 
 final class MainViewController: UIViewController {
@@ -13,40 +12,38 @@ final class MainViewController: UIViewController {
     var cellViewModels = [MovieCellViewModel]()
     var searchController = UISearchController()
     var tableView = UITableView()
-    private var cancellables: Set<AnyCancellable> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        viewModel.mainViewModelDelegate = self
+        viewModel.fetchMovies()
         setupView()
-        bindViewModel()
+    }
+}
+
+extension MainViewController: MainViewModelDelegate {
+    func didUpdateMovies(_ movies: [Movie]) {
+        cellViewModels = movies.map {
+            MovieCellViewModel(cell: MovieTableCell(from: $0))
+        }
+        viewModel.movies = movies
+        viewModel.filteredMovies = movies
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
     
-    func bindViewModel() {
-        viewModel.$movies
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] movies in
-                self?.cellViewModels = movies.map {
-                    MovieCellViewModel(cell: MovieTableCell(from: $0))
-                }
-                self?.tableView.reloadData()
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$filteredMovies
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.tableView.reloadData()
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$searchText
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.viewModel.filterMoviesBySearchText()
-            }
-            .store(in: &cancellables)
+    func didUpdateFilteredMovies(_ filteredMovies: [Movie]) {
+        viewModel.filteredMovies = filteredMovies
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
+    }
+    
+    func didUpdateSearchText(_ searchText: String) {
+        viewModel.searchText = searchText
+        viewModel.filterMoviesBySearchText()
     }
 }
 
