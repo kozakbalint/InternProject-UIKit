@@ -20,33 +20,28 @@ final class MainViewController: UIViewController {
 
         setupView()
         bindViewModel()
+        viewModel.fetchMovies()
     }
     
     func bindViewModel() {
-        viewModel.$movies
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] movies in
-                self?.cellViewModels = movies.map {
-                    MovieCellViewModel(cell: MovieTableCell(from: $0))
-                }
+        viewModel.didUpdateMovies = { [weak self] (movies) in
+            self?.viewModel.movies = movies
+            DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
-            .store(in: &cancellables)
+        }
         
-        viewModel.$filteredMovies
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+        viewModel.didUpdateFilteredMovies = { [weak self] (movies) in
+            self?.viewModel.filteredMovies = movies
+            DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
-            .store(in: &cancellables)
+        }
         
-        viewModel.$searchText
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.viewModel.filterMoviesBySearchText()
-            }
-            .store(in: &cancellables)
+        viewModel.didUpdateSearchText = { [weak self] (text) in
+            self?.viewModel.searchText = text
+            self?.viewModel.filterMoviesBySearchText()
+        }
     }
 }
 

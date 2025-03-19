@@ -19,6 +19,6 @@ extension MainViewController: UISearchResultsUpdating {
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        viewModel.searchText = searchController.searchBar.text ?? ""
+        viewModel.didUpdateSearchText?(searchController.searchBar.text ?? "")
     }
 }
